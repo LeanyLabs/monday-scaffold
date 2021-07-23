@@ -1,6 +1,7 @@
 import arg from "arg";
 import inquirer from "inquirer";
 import { createProject } from "./main";
+import { version } from "../package.json";
 
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg(
@@ -8,9 +9,11 @@ function parseArgumentsIntoOptions(rawArgs) {
       "--git": Boolean,
       "--yes": Boolean,
       "--install": Boolean,
+      "--version": Boolean,
       "-g": "--git",
       "-y": "--yes",
       "-i": "--install",
+      "-v": "--version",
     },
     {
       argv: rawArgs.slice(2),
@@ -22,10 +25,15 @@ function parseArgumentsIntoOptions(rawArgs) {
     git: args["--git"] || false,
     template: args._[0],
     runInstall: args["--install"] || false,
+    version: args["--version"] || false,
   };
 }
 
 async function promptForMissingOptions(options) {
+  if (options.version) {
+    console.log(version);
+    process.exit(1);
+  }
   const defaultTemplate = "TypeScript";
   if (options.skipPrompts) {
     return {
