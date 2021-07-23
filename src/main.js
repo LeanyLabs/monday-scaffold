@@ -32,7 +32,7 @@ async function initGit(options) {
 export async function createProject(options) {
   options = {
     ...options,
-    targetDirectory: options.targetDirectory || process.cwd(),
+    targetDirectory: options.targetDirectory || path.normalize(process.cwd()),
   };
 
   let templateDir = path.resolve(

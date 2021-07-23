@@ -1,3 +1,5 @@
+import path from "path";
+
 export function getUrlToTemplates() {
-  return new URL(__dirname).pathname;
+  return path.normalize(__dirname);
 }
