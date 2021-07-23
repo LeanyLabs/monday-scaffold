@@ -6,6 +6,7 @@ import { promisify } from "util";
 import execa from "execa";
 import Listr from "listr";
 import { projectInstall } from "pkg-install";
+import { getUrlTiTemplate } from "../templates";
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
@@ -34,20 +35,12 @@ export async function createProject(options) {
     targetDirectory: options.targetDirectory || process.cwd(),
   };
 
-  const currentFileUrl = import.meta.url;
   let templateDir = path.resolve(
-    new URL(currentFileUrl).pathname,
-    "../../templates",
+    getUrlTiTemplate(),
     options.template.toLowerCase()
   );
-  options.templateDirectory = templateDir;
 
-  try {
-    await access(templateDir, fs.constants.R_OK);
-  } catch (err) {
-    templateDir = templateDir.slice(3);
-    options.templateDirectory = templateDir;
-  }
+  options.templateDirectory = templateDir;
 
   try {
     await access(templateDir, fs.constants.R_OK);
@@ -57,7 +50,6 @@ export async function createProject(options) {
   }
 
   console.log("Copy project files");
-  //   await copyTemplateFiles(options);
 
   const tasks = new Listr([
     {

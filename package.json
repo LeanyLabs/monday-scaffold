@@ -1,11 +1,11 @@
 {
-  "name": "create-project",
+  "name": "@leanylabs/monday-scaffold",
   "version": "1.0.0",
   "description": "",
   "main": "src/main.js",
   "bin": {
-    "@leanylabs/create-project": "bin/create-project",
-    "create-project": "bin/create-project"
+    "@leanylabs/monday-scaffold": "bin/create-project",
+    "sc-mon": "bin/create-project"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
