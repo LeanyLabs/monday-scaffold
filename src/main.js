@@ -6,6 +6,7 @@ import { promisify } from "util";
 import execa from "execa";
 import Listr from "listr";
 import { projectInstall } from "pkg-install";
+import { getUrlToTemplates } from "../templates";
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
@@ -31,33 +32,24 @@ async function initGit(options) {
 export async function createProject(options) {
   options = {
     ...options,
-    targetDirectory: options.targetDirectory || process.cwd(),
+    targetDirectory: options.targetDirectory || path.normalize(process.cwd()),
   };
 
-  const currentFileUrl = import.meta.url;
   let templateDir = path.resolve(
-    new URL(currentFileUrl).pathname,
-    "../../templates",
+    getUrlToTemplates(),
     options.template.toLowerCase()
   );
+
   options.templateDirectory = templateDir;
 
   try {
     await access(templateDir, fs.constants.R_OK);
   } catch (err) {
-    templateDir = templateDir.slice(3);
-    options.templateDirectory = templateDir;
-  }
-
-  try {
-    await access(templateDir, fs.constants.R_OK);
-  } catch (err) {
     console.error("%s Invalid template name", chalk.red.bold("ERROR"));
-    process.exit(1);
+    return false;
   }
 
   console.log("Copy project files");
-  //   await copyTemplateFiles(options);
 
   const tasks = new Listr([
     {
