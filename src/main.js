@@ -6,7 +6,7 @@ import { promisify } from "util";
 import execa from "execa";
 import Listr from "listr";
 import { projectInstall } from "pkg-install";
-import { getUrlTiTemplate } from "../templates";
+import { getUrlToTemplates } from "../templates";
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
@@ -36,7 +36,7 @@ export async function createProject(options) {
   };
 
   let templateDir = path.resolve(
-    getUrlTiTemplate(),
+    getUrlToTemplates(),
     options.template.toLowerCase()
   );
 
