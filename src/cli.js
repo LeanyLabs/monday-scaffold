@@ -20,20 +20,20 @@ function parseArgumentsIntoOptions(rawArgs) {
     }
   );
 
+  if (args["--version"]) {
+    console.log(version);
+    process.exit(0);
+  }
+
   return {
     skipPrompts: args["--yes"] || false,
     git: args["--git"] || false,
     template: args._[0],
     runInstall: args["--install"] || false,
-    version: args["--version"] || false,
   };
 }
 
 async function promptForMissingOptions(options) {
-  if (options.version) {
-    console.log(version);
-    process.exit(1);
-  }
   const defaultTemplate = "TypeScript";
   if (options.skipPrompts) {
     return {
