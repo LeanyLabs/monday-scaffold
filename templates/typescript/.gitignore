@@ -1,0 +1,12 @@
+node_modules
+response-example.json
+.DS_Store
+.env
+task-definition.production.json
+new-task.json
+.vscode
+/dist
+/build
+/backend/config
+
+package-lock.json
