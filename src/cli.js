@@ -1,6 +1,7 @@
 import arg from "arg";
 import inquirer from "inquirer";
 import { createProject } from "./main";
+import { version } from "../package.json";
 
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg(
@@ -8,14 +9,21 @@ function parseArgumentsIntoOptions(rawArgs) {
       "--git": Boolean,
       "--yes": Boolean,
       "--install": Boolean,
+      "--version": Boolean,
       "-g": "--git",
       "-y": "--yes",
       "-i": "--install",
+      "-v": "--version",
     },
     {
       argv: rawArgs.slice(2),
     }
   );
+
+  if (args["--version"]) {
+    console.log(version);
+    process.exit(0);
+  }
 
   return {
     skipPrompts: args["--yes"] || false,
