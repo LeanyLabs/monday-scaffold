@@ -7,6 +7,10 @@
     "@leanylabs/monday-scaffold": "bin/create-project",
     "sc-mon": "bin/create-project"
   },
+  "repositiry": {
+    "type": "git",
+    "url": "git+https://github.com/LeanyLabs/monday-scaffold.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
