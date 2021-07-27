@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
 import { SERVICE_NAME } from '../config';
+import mondayRoutes from './monday';
 
 const router = express.Router();
 
+router.use(mondayRoutes);
 router.get('/', getHealth);
 router.get('/health', getHealth);
 
