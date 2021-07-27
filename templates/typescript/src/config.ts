@@ -4,6 +4,8 @@ import env from 'env-var';
 export const SERVICE_NAME = env.get('SERVICE_NAME').default('monday-assembled-app').asString();
 export const NODE_ENV = env.get('NODE_ENV').default('local').asString();
 export const PORT = env.get('PORT').default('8080').asPortNumber();
+export const MONDAY_QUERY_INTERVAL_IN_MS = env.get('MONDAY_QUERY_INTERVAL_IN_MS').default(5000).asInt();
+export const MAX_MONDAY_API_RETRIES = env.get('MAX_MONDAY_API_RETRIES').default(3).asInt();
 export const LOGGING_LEVEL = env
   .get('LOGGING_LEVEL')
   .default('info')
