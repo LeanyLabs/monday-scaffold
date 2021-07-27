@@ -4,8 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "bin": {
-    "@leanylabs/monday-scaffold": "bin/create-project",
-    "sc-mon": "bin/create-project"
+    "sc-mon": "./bin/create-project"
   },
   "repositiry": {
     "type": "git",
