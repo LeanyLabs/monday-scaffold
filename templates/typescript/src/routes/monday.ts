@@ -1,11 +1,13 @@
 import { Router } from 'express';
-import { authenticationMiddleware } from '../middlewares/authentication';
-import { executeAction, getRemoteListOptions } from '../controllers/monday-controller';
 import wrapAsync from 'express-async-handler';
 
-const router = Router();
+import authenticationMiddleware from '../middlewares/monday-authentication';
+import prepareMondayMiddleware from '../middlewares/monday-utils';
+import { executeAction, getRemoteListOptions } from '../controllers/monday-controller';
 
-router.post('monday/execute_action', authenticationMiddleware, wrapAsync(executeAction));
-router.post('/monday/get_remote_list_options', authenticationMiddleware, getRemoteListOptions);
+const router = Router().use(authenticationMiddleware).use(prepareMondayMiddleware);
+
+router.post('monday/execute_action', wrapAsync(executeAction));
+router.post('/monday/get_remote_list_options', getRemoteListOptions);
 
 export default router;

@@ -1,7 +1,8 @@
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import logger from '@leanylabs/logger';
 
-export async function authenticationMiddleware(req, res, next) {
+export default async function (req: any, res: Response, next: NextFunction) {
   try {
     let { authorization } = req.headers;
     if (!authorization && req.query) {
