@@ -7,7 +7,7 @@ import { executeAction, getRemoteListOptions } from '../controllers/monday-contr
 
 const router = Router().use(authenticationMiddleware).use(prepareMondayMiddleware);
 
-router.post('monday/execute_action', wrapAsync(executeAction));
-router.post('/monday/get_remote_list_options', getRemoteListOptions);
+router.post('/execute_action', wrapAsync(executeAction));
+router.post('/get_remote_list_options', getRemoteListOptions);
 
 export default router;
