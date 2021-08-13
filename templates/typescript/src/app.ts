@@ -3,7 +3,7 @@ import { logger } from '@leanylabs/logger';
 import { PORT, SERVICE_NAME } from './config';
 import routes from './routes';
 import { tracer } from './middlewares/tracer';
-import { handleErrors } from './middlewares/error-handler.middleware';
+import { handleErrors } from './middlewares/error-handler';
 
 async function start() {
   try {
@@ -18,7 +18,9 @@ async function start() {
     app.listen(PORT, function () {
       logger.info(`${SERVICE_NAME} server started at http://localhost:${PORT}`);
     });
-  } catch (error) {}
+  } catch (error) {
+    logger.error('App did not started!', { message: error.message, error });
+  }
 }
 
 start();

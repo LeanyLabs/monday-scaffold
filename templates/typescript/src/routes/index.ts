@@ -4,7 +4,7 @@ import mondayRoutes from './monday';
 
 const router = express.Router();
 
-router.use(mondayRoutes);
+router.use('/monday', mondayRoutes);
 router.get('/', getHealth);
 router.get('/health', getHealth);
 

@@ -27,6 +27,9 @@
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
     "monday-sdk-js": "^0.1.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "axios": "^0.21.1",
+    "sequelize": "^6.6.5",
+    "pg": "^8.6.0"
   }
 }
