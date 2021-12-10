@@ -10,15 +10,29 @@ export async function executeAction(req, res) {
   try {
     const { payload } = req.body;
     const { inputFields } = payload;
-    const { boardId, itemId, sourceColumnId, targetColumnId, transformationType } = inputFields;
+    const {
+      boardId,
+      itemId,
+      sourceColumnId,
+      targetColumnId,
+      transformationType,
+    } = inputFields;
 
     const text = await apiClient.getColumnValue(itemId, sourceColumnId);
     if (!text) {
       return res.status(200).send({});
     }
-    const transformedText = transformText(text, transformationType ? transformationType.value : 'TO_UPPER_CASE');
+    const transformedText = transformText(
+      text,
+      transformationType ? transformationType.value : 'TO_UPPER_CASE'
+    );
 
-    await apiClient.changeColumnValue(boardId, itemId, targetColumnId, transformedText);
+    await apiClient.changeColumnValue(
+      boardId,
+      itemId,
+      targetColumnId,
+      transformedText
+    );
 
     return res.status(200).send({});
   } catch (err) {

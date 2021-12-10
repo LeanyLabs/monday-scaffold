@@ -6,7 +6,9 @@
   "scripts": {
     "start": "ts-node-dev ./src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tunnel": "ts-node ./src/infra/tunnel.ts"
+    "tunnel": "ts-node ./src/infra/tunnel.ts",
+    "format": "prettier --config .prettierrc.json --write .",
+    "lint": "eslint src/**/*.ts --fix"
   },
   "keywords": [],
   "author": "",
