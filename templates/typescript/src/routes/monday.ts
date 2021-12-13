@@ -1,23 +1,12 @@
 import { Router } from 'express';
-import { authenticationMiddleware } from '../middlewares/authentication';
-import {
-  executeAction,
-  getRemoteListOptions,
-} from '../controllers/monday-controller';
 import wrapAsync from 'express-async-handler';
+import { authenticationMiddleware } from '../middlewares/authentication';
+import { getRemoteListOptions } from '../controllers/monday-types-controller';
+import { executeAction } from '../controllers/monday-actions-controller';
 
-//TODO: use similar midleware through 'use'
-const router = Router();
+const router = Router().use(authenticationMiddleware);
 
-router.post( //TODO: remove 'monday', add 'actions'
-  '/execute_action',
-  authenticationMiddleware,
-  wrapAsync(executeAction)
-);
-router.post(
-  '/monday/get_remote_list_options',
-  authenticationMiddleware,
-  getRemoteListOptions
-);
+router.post('/actions/execute_action', wrapAsync(executeAction));
+router.post('/get_remote_list_options', getRemoteListOptions);
 
 export default router;
