@@ -3,11 +3,12 @@ import { MondayApiClient } from '../services/monday-api.client.service';
 import { transformText } from '../services/transformation-service';
 import { logger } from '@leanylabs/logger';
 
+//TODO: split it into two files 'monday-actions-controller', 'monday-types-controller'
 export async function executeAction(req, res) {
-  const { shortLivedToken } = req.session;
+  const { shortLivedToken } = req.session; //TODO: take 'mondayAPI' from session
   const apiClient = new MondayApiClient(shortLivedToken);
 
-  try {
+  try { //TODO: remove try-catch we have middleware for that
     const { payload } = req.body;
     const { inputFields } = payload;
     const {

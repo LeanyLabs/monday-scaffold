@@ -8,17 +8,17 @@ import { handleErrors } from './middlewares/error-handler.middleware';
 async function start() {
   try {
     const app = express();
-
     app
       .use(tracer)
       .use(express.json({ limit: '10mb' }))
       .use(routes)
       .use(handleErrors);
-
     app.listen(PORT, function () {
       logger.info(`${SERVICE_NAME} server started at http://localhost:${PORT}`);
     });
-  } catch (error) {}
+  } catch (error) {
+    logger.error('The app has been crashed', { error });
+  }
 }
 
 start();

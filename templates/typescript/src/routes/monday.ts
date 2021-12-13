@@ -6,10 +6,11 @@ import {
 } from '../controllers/monday-controller';
 import wrapAsync from 'express-async-handler';
 
+//TODO: use similar midleware through 'use'
 const router = Router();
 
-router.post(
-  'monday/execute_action',
+router.post( //TODO: remove 'monday', add 'actions'
+  '/execute_action',
   authenticationMiddleware,
   wrapAsync(executeAction)
 );

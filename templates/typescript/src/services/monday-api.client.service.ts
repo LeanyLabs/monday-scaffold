@@ -1,7 +1,7 @@
 import initMondayClient from 'monday-sdk-js';
 import { logger } from '@leanylabs/logger';
 import { MAX_MONDAY_API_RETRIES, MONDAY_QUERY_INTERVAL_IN_MS } from '../config';
-import { delay } from '../utils/delay';
+import { delay, watchdog } from '../utils/delay';
 import { callWithRetry } from '../utils/retry';
 
 // copy-pasted and extended from 'monday-sdk-js'
@@ -21,9 +21,17 @@ interface MondayServerSdk {
 
 export class MondayApiClient {
   private client: MondayServerSdk;
+  //TODO: possible add 'expiresAt'
 
   constructor(token: string) {
     this.client = initMondayClient({ token });
+  }
+
+  //TODO: make safe _api method!
+  async _api(query: string, variables: any) {
+    const result = await watchdog(this.client.api(query, { variables }), 60_000);
+    //TODO: throw error if has one
+    return result.data;
   }
 
   async getBoardColumnData(boardId) {
@@ -40,7 +48,7 @@ export class MondayApiClient {
 
     const variables = { boardId };
 
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query,  variables );
 
     return response.data.boards[0].columns;
   }
@@ -196,6 +204,7 @@ export class MondayApiClient {
   }
 }
 
+//TODO: remove it
 function retry() {
   return function decorator(
     target: any,

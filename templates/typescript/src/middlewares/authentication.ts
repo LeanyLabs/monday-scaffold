@@ -11,6 +11,7 @@ export async function authenticationMiddleware(req, res, next) {
       authorization,
       process.env.MONDAY_SIGNING_SECRET
     );
+    //TODO: add 'MondayApi' client here
     req.session = { accountId, userId, backToUrl, shortLivedToken };
     next();
   } catch (err) {
