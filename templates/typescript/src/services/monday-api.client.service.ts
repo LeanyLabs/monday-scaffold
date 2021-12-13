@@ -8,8 +8,15 @@ import { callWithRetry } from '../utils/retry';
 // because it's not exported and seems outdated
 interface MondayServerSdk {
   setToken(token: string): void;
-  api(query: string, options?: Partial<{ token: string; variables: any }>): Promise<any>;
-  oauthToken(code: string, clientId: string, clientSecret: string): Promise<any>;
+  api(
+    query: string,
+    options?: Partial<{ token: string; variables: any }>
+  ): Promise<any>;
+  oauthToken(
+    code: string,
+    clientId: string,
+    clientSecret: string
+  ): Promise<any>;
 }
 
 export class MondayApiClient {
@@ -48,11 +55,13 @@ export class MondayApiClient {
       }
     }`;
 
-    const variables: { boardId: string | number } = { boardId: Number(boardId) };
+    const variables: { boardId: string | number } = {
+      boardId: Number(boardId),
+    };
     const response = await this.client.api(query, { variables });
     const itemIds = response.data.boards[0].items;
 
-    for (let item of itemIds) {
+    for (const item of itemIds) {
       await this.deleteItem(item.id);
       await delay(MONDAY_QUERY_INTERVAL_IN_MS);
     }
@@ -150,7 +159,12 @@ export class MondayApiClient {
   }
 
   @retry()
-  async changeColumnValue(boardId: string, itemId: string, columnId: string, value: any) {
+  async changeColumnValue(
+    boardId: string,
+    itemId: string,
+    columnId: string,
+    value: any
+  ) {
     const query = `
       mutation change_column_value($boardId: Int!, $itemId: Int!, $columnId: String!, $value: JSON!) {
         change_column_value(board_id: $boardId, item_id: $itemId, column_id: $columnId, value: $value) {
@@ -193,6 +207,7 @@ function retry() {
     descriptor.value = async function () {
       return await callWithRetry(
         async () => {
+          // eslint-disable-next-line prefer-rest-params
           return await oldFunc.apply(this, arguments);
         },
         MAX_MONDAY_API_RETRIES,
