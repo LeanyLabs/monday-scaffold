@@ -1,8 +1,7 @@
 import initMondayClient from 'monday-sdk-js';
 import { logger } from '@leanylabs/logger';
-import { MAX_MONDAY_API_RETRIES, MONDAY_QUERY_INTERVAL_IN_MS } from '../config';
-import { delay } from '../utils/delay';
-import { callWithRetry } from '../utils/retry';
+import { MONDAY_QUERY_INTERVAL_IN_MS } from '../config';
+import { delay, watchdog } from '../utils/delay';
 
 // copy-pasted and extended from 'monday-sdk-js'
 // because it's not exported and seems outdated
@@ -21,9 +20,30 @@ interface MondayServerSdk {
 
 export class MondayApiClient {
   private client: MondayServerSdk;
+  private expiresAt: number;
 
-  constructor(token: string) {
+  constructor(token: string, exp: number) {
     this.client = initMondayClient({ token });
+    this.expiresAt = exp;
+  }
+
+  async _api(query: string, variables: any) {
+    try {
+      const result = await watchdog(
+        this.client.api(query, { variables }),
+        60_000
+      );
+
+      if (result.errors) {
+        const [{ message }] = result.errors;
+        throw new Error(message);
+      }
+
+      return result.data ? result.data : result;
+    } catch (error) {
+      logger.error('Error has been encountered ', { query, variables, error });
+      throw error;
+    }
   }
 
   async getBoardColumnData(boardId) {
@@ -40,9 +60,9 @@ export class MondayApiClient {
 
     const variables = { boardId };
 
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
-    return response.data.boards[0].columns;
+    return response.boards[0].columns;
   }
 
   async deleteAllItemsFromTheBoard(boardId) {
@@ -58,8 +78,8 @@ export class MondayApiClient {
     const variables: { boardId: string | number } = {
       boardId: Number(boardId),
     };
-    const response = await this.client.api(query, { variables });
-    const itemIds = response.data.boards[0].items;
+    const response = await this._api(query, variables);
+    const itemIds = response.boards[0].items;
 
     for (const item of itemIds) {
       await this.deleteItem(item.id);
@@ -81,7 +101,7 @@ export class MondayApiClient {
     const variables = { itemId: Number(itemId) };
 
     try {
-      const response = await this.client.api(query, { variables });
+      const response = await this._api(query, variables);
 
       return response;
     } catch (error) {
@@ -101,9 +121,9 @@ export class MondayApiClient {
     `;
 
     const variables = { columnId, itemId };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
-    return response.data.items[0].column_values[0].value;
+    return response.items[0].column_values[0].value;
   }
 
   async checkIfItemExistsById(itemId: string): Promise<boolean> {
@@ -115,12 +135,11 @@ export class MondayApiClient {
       }`;
 
     const variables = { itemId: Number(itemId) };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
     return !!response?.data?.items?.length;
   }
 
-  @retry()
   async createItem(boardId: number, columnValues: string, itemName: string) {
     const query = `
       mutation
@@ -131,12 +150,11 @@ export class MondayApiClient {
         }`;
 
     const variables = { boardId, columnValues, itemName };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
     return response;
   }
 
-  @retry()
   async updateItem(boardId: number, columnValues: string, itemId: string) {
     const columnValuesToUpdate = JSON.parse(columnValues);
 
@@ -153,12 +171,11 @@ export class MondayApiClient {
       }`;
 
     const variables = { boardId, itemId: Number(itemId), columnValues };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
     return response;
   }
 
-  @retry()
   async changeColumnValue(
     boardId: string,
     itemId: string,
@@ -174,12 +191,11 @@ export class MondayApiClient {
     `;
 
     const variables = { boardId, columnId, itemId, value };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
     return response;
   }
 
-  @retry()
   async createColumns(boardId: number) {
     const query = `
       mutation create_column($boardId: Int!, $title: String!, $column_type: ColumnType!, $defaults: JSON!) {
@@ -190,29 +206,8 @@ export class MondayApiClient {
     `;
 
     const variables = { boardId };
-    const response = await this.client.api(query, { variables });
+    const response = await this._api(query, variables);
 
     return response;
   }
-}
-
-function retry() {
-  return function decorator(
-    target: any,
-    propName: string,
-    descriptor: TypedPropertyDescriptor<(...params: any[]) => any>
-  ) {
-    const oldFunc = descriptor.value;
-
-    descriptor.value = async function () {
-      return await callWithRetry(
-        async () => {
-          // eslint-disable-next-line prefer-rest-params
-          return await oldFunc.apply(this, arguments);
-        },
-        MAX_MONDAY_API_RETRIES,
-        MONDAY_QUERY_INTERVAL_IN_MS
-      );
-    };
-  };
 }
