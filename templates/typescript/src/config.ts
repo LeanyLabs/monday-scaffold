@@ -20,5 +20,12 @@ export const LOGGING_LEVEL = env
   .default('info')
   .asEnum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']);
 
+export const { DB_NAME, DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+export const { MONDAY_CLIENT_ID, MONDAY_CLIENT_SECRET, MONDAY_SIGNING_SECRET } =
+  process.env;
+
+export const DB_PORT = env.get('DB_PORT').default('5432').asInt();
+export const SQL_TRACE = env.get('SQL_TRACE').default('false').asBool();
+
 export const isProd = NODE_ENV.includes('prod');
 export const isDev = !isProd;

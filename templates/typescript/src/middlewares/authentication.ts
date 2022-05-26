@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import logger from '@leanylabs/logger';
-import { MondayApiClient } from '../services/monday-api.client.service';
+import { MondayApi } from '../services/monday/api';
 
 export async function authenticationMiddleware(req, res, next) {
   try {
@@ -12,7 +12,7 @@ export async function authenticationMiddleware(req, res, next) {
       authorization,
       process.env.MONDAY_SIGNING_SECRET
     );
-    const apiClient = new MondayApiClient(shortLivedToken, exp);
+    const apiClient = new MondayApi(shortLivedToken, exp);
     req.session = {
       accountId,
       userId,
