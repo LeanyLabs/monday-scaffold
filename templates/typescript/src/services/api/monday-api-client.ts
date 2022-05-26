@@ -11,6 +11,7 @@ export class MondayApi extends MondayApiBase {
         reset_in_x_seconds
       }
     }`;
+
     return await this.api(query, {});
   }
 
@@ -41,6 +42,7 @@ export class MondayApi extends MondayApiBase {
     `;
 
     const variables = { userId, targetId, text, targetType };
+
     return await this.api(query, variables);
   }
 
@@ -80,6 +82,7 @@ export class MondayApi extends MondayApiBase {
         }`;
 
     const variables = { boardId, groupId, columnValues, itemName };
+
     const response = await this.api(query, variables);
 
     return response.create_item?.id;
@@ -100,6 +103,7 @@ export class MondayApi extends MondayApiBase {
           id
         }
       }`;
+
     const variables = { boardId, itemId: Number(itemId), columnValues };
 
     return await this.api(query, variables);
