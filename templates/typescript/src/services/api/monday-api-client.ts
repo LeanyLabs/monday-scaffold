@@ -43,4 +43,65 @@ export class MondayApi extends MondayApiBase {
     const variables = { userId, targetId, text, targetType };
     return await this.api(query, variables);
   }
+
+  async deleteItem(itemId: string | number) {
+    const query = `
+      mutation
+        delete_item($itemId: Int!) {
+          delete_item (item_id: $itemId) {
+            id
+          }
+        }
+    `;
+
+    const variables = { itemId: Number(itemId) };
+
+    const response = await this.api(query, variables);
+
+    return response.delete_item?.id;
+  }
+
+  async createItem(
+    boardId: number,
+    groupId: string = '',
+    columnValues: string,
+    itemName: string
+  ) {
+    const columnValuesToUpdate = JSON.parse(columnValues);
+    delete columnValuesToUpdate.__groupId__;
+    columnValues = JSON.stringify(columnValuesToUpdate);
+
+    const query = `
+      mutation
+        create_item ($boardId: Int!, $groupId: String!, $columnValues: JSON!, $itemName: String!) {
+          create_item (board_id: $boardId, group_id: $groupId, item_name: $itemName, column_values: $columnValues, create_labels_if_missing: true ) {
+            id
+          }
+        }`;
+
+    const variables = { boardId, groupId, columnValues, itemName };
+    const response = await this.api(query, variables);
+
+    return response.create_item?.id;
+  }
+
+  async updateItem(
+    boardId: number,
+    columnValues: string,
+    itemId: string | number
+  ) {
+    const columnValuesToUpdate = JSON.parse(columnValues);
+    delete columnValuesToUpdate.__groupId__;
+    columnValues = JSON.stringify(columnValuesToUpdate);
+
+    const query = `
+      mutation change_multiple_column_values ($boardId: Int!, $itemId: Int!, $columnValues: JSON!) {
+        change_multiple_column_values (board_id: $boardId, item_id: $itemId, column_values: $columnValues, create_labels_if_missing: true) {
+          id
+        }
+      }`;
+    const variables = { boardId, itemId: Number(itemId), columnValues };
+
+    return await this.api(query, variables);
+  }
 }
