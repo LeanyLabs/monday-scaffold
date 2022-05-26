@@ -1,7 +1,7 @@
 import { logger } from '@leanylabs/logger';
 import { secondsToMilliseconds } from 'date-fns';
 import { MondayApiBase } from './monday-api-base';
-import { delay } from '../../utils/delay';
+import { delay } from '../../../utils/delay';
 
 export class MondayApi extends MondayApiBase {
   async complexity() {

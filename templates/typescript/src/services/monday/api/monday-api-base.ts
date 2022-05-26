@@ -1,8 +1,8 @@
 import { logger } from '@leanylabs/logger';
 import { secondsToMilliseconds } from 'date-fns';
 import initMondayClient from 'monday-sdk-js';
-import { TimeoutError } from '../../utils/timeout-error';
-import { watchdog } from '../../utils/delay';
+import { TimeoutError } from '../../../utils/timeout-error';
+import { watchdog } from '../../../utils/delay';
 
 export interface MondayServerSdk {
   setToken(token: string): void;
