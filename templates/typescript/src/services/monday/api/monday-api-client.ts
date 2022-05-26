@@ -108,4 +108,21 @@ export class MondayApi extends MondayApiBase {
 
     return await this.api(query, variables);
   }
+
+  async getColumnValue(itemId: string, columnId: string) {
+    const query = `
+      query($itemId: [Int], $columnId: [String]) {
+        items (ids: $itemId) {
+          column_values(ids:$columnId) {
+            value
+          }
+        }
+      }
+    `;
+
+    const variables = { columnId, itemId };
+    const response = await this.api(query, variables);
+
+    return response.items[0].column_values[0].value;
+  }
 }
