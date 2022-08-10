@@ -21,6 +21,7 @@ async function actions(fastify: FastifyInstance) {
 }
 
 async function triggers(fastify: FastifyInstance) {
+  fastify.addHook('onRequest', authenticationMiddleware);
   fastify.post('/subscribe', subscribe);
   fastify.post('/unsubscribe', unsubscribe);
 }
