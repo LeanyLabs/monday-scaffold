@@ -3,9 +3,8 @@ import { Subscription } from '~/models/Subscription';
 export async function subscribe(req, res) {
   const { accountId, userId } = req.session;
 
-  const payload = req.body.payload;
-  const webhookUrl = payload.webhookUrl;
-  const boardId = Number(payload.inputFields.boardId);
+  const { webhookUrl, inputFields } = req.body.payload;
+  const boardId = Number(inputFields.boardId);
 
   const subscription = await Subscription.create({
     accountId,

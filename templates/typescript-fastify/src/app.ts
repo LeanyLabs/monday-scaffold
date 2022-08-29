@@ -11,14 +11,14 @@ import { accessTokenManager } from '~/services/monday/auth/access-token-manager'
     await initSequelize();
     await accessTokenManager.init();
 
-    const fastify = Fastify({bodyLimit: 10485760});
+    const fastify = Fastify({ bodyLimit: 10485760 });
     fastify.register(routes);
     fastify.setErrorHandler(handleErrors);
 
-    await fastify.listen({port: PORT});
-    logger.info(`${SERVICE_NAME} server started at http://localhost:${PORT}`);
+    await fastify.listen({ port: PORT, host: '0.0.0.0' });
+    logger.info(`${SERVICE_NAME} server started at port ${PORT}`);
   } catch (error) {
-    logger.error('The app has crashed', {error});
+    logger.error('The app has crashed', { error });
   }
 })();
 

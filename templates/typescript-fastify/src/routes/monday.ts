@@ -12,8 +12,7 @@ export async function mondayRoutes(fastify: FastifyInstance) {
 
 async function authorization(fastify: FastifyInstance) {
   fastify.get('/callback', getAccessToken);
-  fastify.addHook('onRequest', authenticationMiddleware);
-  fastify.get('/monday', auth);
+  fastify.get('/monday', { preHandler: authenticationMiddleware }, auth);
 }
 
 async function actions(fastify: FastifyInstance) {

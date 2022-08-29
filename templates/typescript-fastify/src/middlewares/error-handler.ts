@@ -7,5 +7,5 @@ export function handleErrors(
   res: FastifyReply
 ) {
   logger.error(`Route failed: ${req.url}`, err);
-  res.status(500).send('Internal Server Error');
+  res.code(500).send('Internal Server Error');
 }

@@ -23,6 +23,6 @@ export async function authenticationMiddleware(req, res, done) {
     done();
   } catch (err) {
     logger.error('Auth middleware error', err);
-    res.status(401).send({ error: 'not authenticated' });
+    res.code(401).send({ error: 'not authenticated' });
   }
 }
