@@ -5,5 +5,5 @@ export async function executeAction(req, res) {
   const { boardId, itemId, sourceColumnId, targetColumnId, transformationType } = inputFields;
 
 
-  return res.status(200).send({});
+  return res.code(200).send({});
 }
