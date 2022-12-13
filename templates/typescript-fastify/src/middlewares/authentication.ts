@@ -2,7 +2,7 @@ import logger from '@leanylabs/logger';
 import jwt from 'jsonwebtoken';
 import { MondayApi } from '~/services/monday/api';
 
-export async function authenticationMiddleware(req, res, done) {
+export async function authenticationMiddleware(req, res) {
   try {
     let { authorization } = req.headers;
     if (!authorization && req.query) {
@@ -20,7 +20,6 @@ export async function authenticationMiddleware(req, res, done) {
       shortLivedToken,
       apiClient
     };
-    done();
   } catch (err) {
     logger.error('Auth middleware error', err);
     res.code(401).send({ error: 'not authenticated' });
