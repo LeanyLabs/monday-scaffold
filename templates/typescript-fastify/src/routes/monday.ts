@@ -4,6 +4,7 @@ import { subscribe, unsubscribe } from '~/controllers/monday-triggers-controller
 import { authenticationMiddleware } from '~/middlewares/authentication';
 import { auth, getAccessToken } from '~/services/monday/auth/auth-controller';
 
+
 export async function mondayRoutes(fastify: FastifyInstance) {
   fastify.register(authorization, { prefix: '/auth' });
   fastify.register(actions, { prefix: '/actions' });
@@ -16,10 +17,10 @@ async function authorization(fastify: FastifyInstance) {
 }
 
 async function actions(fastify: FastifyInstance) {
-  fastify.post('/execute', executeAction);
+  fastify.post('/execute', { preHandler: authenticationMiddleware }, executeAction);
 }
 
 async function triggers(fastify: FastifyInstance) {
-  fastify.post('/subscribe', subscribe);
-  fastify.post('/unsubscribe', unsubscribe);
+  fastify.post('/subscribe', { preHandler: authenticationMiddleware }, subscribe);
+  fastify.post('/unsubscribe', { preHandler: authenticationMiddleware }, unsubscribe);
 }

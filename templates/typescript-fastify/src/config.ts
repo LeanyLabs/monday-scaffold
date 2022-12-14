@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import env from 'env-var';
 
+
 dotenv.config();
 export const SERVICE_NAME = env.get('SERVICE_NAME').default('monday-assembled-app').asString();
 export const NODE_ENV = env.get('NODE_ENV').default('local').asString();

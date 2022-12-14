@@ -2,9 +2,11 @@ import { DataTypes, Model } from 'sequelize';
 import { v4 as uuid } from 'uuid';
 import { sequelize } from '~/services/db-service';
 
+
 export class Subscription extends Model {
   id: string;
   accountId: number;
+  userId: number;
   boardId: number;
   webhookUrl: string;
 }

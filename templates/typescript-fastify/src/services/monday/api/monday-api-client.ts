@@ -3,6 +3,7 @@ import { secondsToMilliseconds } from 'date-fns';
 import { MondayApiBase } from '~/services/monday/api/monday-api-base';
 import { delay } from '~/utils/delay';
 
+
 export class MondayApi extends MondayApiBase {
   async complexity() {
     const query = `query {

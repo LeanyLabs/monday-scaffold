@@ -1,6 +1,7 @@
 import { logger } from '@leanylabs/logger';
 import { delay } from '~/utils/delay';
 
+
 export async function callWithRetry(callback, maxTries, queryDelay) {
   let lastError: Error;
   let tries = 0;

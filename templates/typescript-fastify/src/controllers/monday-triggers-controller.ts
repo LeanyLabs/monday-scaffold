@@ -1,6 +1,9 @@
+import { FastifyReply } from 'fastify';
 import { Subscription } from '~/models/Subscription';
+import { MondayRequest, TriggerBody } from '~/types';
 
-export async function subscribe(req, res) {
+
+export async function subscribe(req: MondayRequest<TriggerBody>, res: FastifyReply) {
   const { accountId, userId } = req.session;
 
   const { webhookUrl, inputFields } = req.body.payload;
@@ -18,7 +21,7 @@ export async function subscribe(req, res) {
   });
 }
 
-export async function unsubscribe(req, res) {
+export async function unsubscribe(req: MondayRequest, res: FastifyReply) {
   const webhookId = req.body.payload.webhookId;
   await Subscription.destroy({ where: { id: webhookId } });
   return res.send({});

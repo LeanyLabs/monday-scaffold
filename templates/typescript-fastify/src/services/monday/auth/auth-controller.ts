@@ -4,6 +4,7 @@ import { MONDAY_CLIENT_ID, MONDAY_CLIENT_SECRET, MONDAY_SIGNING_SECRET } from '~
 import { MondayApi } from '~/services/monday/api';
 import { accessTokenManager } from '~/services/monday/auth/access-token-manager';
 
+
 export function getAuthUrl(state: string) {
   return `https://auth.monday.com/oauth2/authorize?client_id=${MONDAY_CLIENT_ID}&state=${state}`;
 }

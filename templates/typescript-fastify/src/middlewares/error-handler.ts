@@ -1,6 +1,7 @@
 import { logger } from '@leanylabs/logger';
 import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 
+
 export function handleErrors(
   err: FastifyError,
   req: FastifyRequest,

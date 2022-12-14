@@ -6,6 +6,7 @@ import { routes } from '~/routes';
 import { initSequelize } from '~/services/db-service';
 import { accessTokenManager } from '~/services/monday/auth/access-token-manager';
 
+
 (async function start() {
   try {
     await initSequelize();

@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '~/services/db-service';
 
+
 export class AccessToken extends Model {
   accountId: number;
   userId: number;
